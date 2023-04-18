@@ -1,0 +1,4 @@
+networkx==2.5.1
+osmnx==1.1.1
+folium==0.12.1
+geopy==2.2.0
