@@ -100,7 +100,7 @@ class Grafica:
 
 
 class main:
-    # Creacion del grafo de primera aproximacion (GRAFO NO DIRIGIDO)
+    # Creacion del grafo de segundo ajuste (GRAFO DIRIGIDO)
     g = Grafica()
     # Se agregan los vertices al grafo
     # Vertices de inicio y fin
@@ -140,6 +140,7 @@ class main:
     g.agregarVertice(v14)
     g.agregarVertice(v15)
     # Se indican las aristas del grafo y sus respectivas distancias
+    # Al agregarse las aristas, se va indicando el sentido de cada vertice
     g.agregarArista(I, v1, 100)
     g.agregarArista(v1, v2, 250)
     g.agregarArista(v1, v4, 90)
