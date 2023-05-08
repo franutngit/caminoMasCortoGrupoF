@@ -39,9 +39,7 @@ class Grafica:
     # 6 - Metodo que devuelve la informacion que contiene cada vertice (distancia y predecesor):
     def imprimirGrafica(self):
         for v in self.vertices:
-            print("La distancia más corta al vertice " + str(v) + " es " + str(
-                self.vertices[v].distancia) + "; vértice predecesor: " +
-                  str(self.vertices[v].predecesor))
+            print(f'La distancia más corta al vertice {v} es {self.vertices[v].distancia}m; vértice predecesor: {self.vertices[v].predecesor}')
 
     # 5 - Metodo que indica el recorrido de la ruta mas corta y la distancia total de la misma
     def camino(self, b):  # Recibe como parametro el vertice final
@@ -50,12 +48,12 @@ class Grafica:
         if self.vertices[b].distancia == float('inf'):
             return 'El vertice final es inaccesible'
         else:
-            print("\n\nLa ruta mas rapida por Dijkstra y la distancia correspondiente es:")
+            print("\n\nRuta mas rapida por Dijkstra y distancia correspondiente:")
             # Recorre los vertices desde el final yendo por los predecesores, para definir el camino mas corto
             while actual is not None:
                 camino.insert(0, actual)
                 actual = self.vertices[actual].predecesor
-            return [camino, self.vertices[b].distancia]
+            return f'El camino mas corto es {camino} y la distancia es de {self.vertices[b].distancia} metros'
 
     # 4 - Funcion que retorna el vertice con menor distancia, de la lista de los no visitados
     def minimo(self, lista):  # lista: vertices no visitados
@@ -109,25 +107,25 @@ class main:
     g = Grafica()
     # Se agregan los vertices al grafo
     # Vertices de inicio y fin
-    I = 'Inicio'
-    F = 'Fin'
+    I = 'UTN'
+    F = 'Destino'
 
     # Vertices intermedios
-    v1 = '1'
-    v2 = '2'
-    v3 = '3'
-    v4 = '4'
-    v5 = '5'
-    v6 = '6'
-    v7 = '7'
-    v8 = '8'
-    v9 = '9'
-    v10 = '10'
-    v11 = '11'
-    v12 = '12'
-    v13 = '13'
-    v14 = '14'
-    v15 = '15'
+    v1 = 'Rodriguez y Sobremonte'
+    v2 = 'Rodriguez y A Villanueva'
+    v3 = 'Rodriguez y R Ortega'
+    v4 = 'Rotonda UTN'
+    v5 = 'Belgrano y A Villanueva'
+    v6 = 'Belgrano y Colon'
+    v7 = 'Belgrano y R Ortega/San Lorenzo'
+    v8 = 'Pedro Molina y Peru'
+    v9 = 'Peru y Infanta M de San Martin'
+    v10 = 'Colon y Peru'
+    v11 = 'San Lorenzo y Peru'
+    v12 = 'Pedro Molina y 25 de Mayo'
+    v13 = '25 de Mayo y Infanta M de San Martin'
+    v14 = 'Colon y 25 de Mayo'
+    v15 = '25 de Mayo y San Lorenzo'
 
     # Lista de vertices intermedios
     vert = [v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15]
