@@ -1,4 +1,4 @@
-"""Prueba Dijkstra - Tercer ajuste"""
+"""Prueba Dijkstra - Tercer ajuste: Formato de listas en vertices y aristas"""
 
 '''Clase que define los vertices del grafo'''
 
@@ -39,7 +39,8 @@ class Grafica:
     # 6 - Metodo que devuelve la informacion que contiene cada vertice (distancia y predecesor):
     def imprimirGrafica(self):
         for v in self.vertices:
-            print(f'La distancia más corta al vertice {v} es {self.vertices[v].distancia}m; vértice predecesor: {self.vertices[v].predecesor}')
+            print(
+                f'La distancia más corta al vertice {v} es {self.vertices[v].distancia}m; vértice predecesor: {self.vertices[v].predecesor}')
 
     # 5 - Metodo que indica el recorrido de la ruta mas corta y la distancia total de la misma
     def camino(self, b):  # Recibe como parametro el vertice final
@@ -105,69 +106,66 @@ class Grafica:
 class main:
     # Creacion del grafo de segundo ajuste (GRAFO DIRIGIDO)
     g = Grafica()
-    # Se agregan los vertices al grafo
-    # Vertices de inicio y fin
-    I = 'UTN'
-    F = 'Destino'
 
-    # Vertices intermedios
-    v1 = 'Rodriguez y Sobremonte'
-    v2 = 'Rodriguez y A Villanueva'
-    v3 = 'Rodriguez y R Ortega'
-    v4 = 'Rotonda UTN'
-    v5 = 'Belgrano y A Villanueva'
-    v6 = 'Belgrano y Colon'
-    v7 = 'Belgrano y R Ortega/San Lorenzo'
-    v8 = 'Pedro Molina y Peru'
-    v9 = 'Peru y Infanta M de San Martin'
-    v10 = 'Colon y Peru'
-    v11 = 'San Lorenzo y Peru'
-    v12 = 'Pedro Molina y 25 de Mayo'
-    v13 = '25 de Mayo y Infanta M de San Martin'
-    v14 = 'Colon y 25 de Mayo'
-    v15 = '25 de Mayo y San Lorenzo'
-
-    # Lista de vertices intermedios
-    vert = [v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15]
+    # VERTICES en forma de lista (el primero es el origen y el ultimo es el destino):
+    v = ['UTN',  # I
+         'Rodriguez y Sobremonte',  # 1
+         'Rodriguez y A Villanueva',  # 2
+         'Rodriguez y R Ortega',  # 3
+         'Rotonda UTN',  # 4
+         'Belgrano y A Villanueva',  # 5
+         'Belgrano y Colon',  # 6
+         'Belgrano y R Ortega/San Lorenzo',  # 7
+         'Pedro Molina y Peru',  # 8
+         'Peru y Infanta M de San Martin',  # 9
+         'Colon y Peru',  # 10
+         'San Lorenzo y Peru',  # 11
+         'Pedro Molina y 25 de Mayo',  # 12
+         '25 de Mayo y Infanta M de San Martin',  # 13
+         'Colon y 25 de Mayo',  # 14
+         '25 de Mayo y San Lorenzo',  # 15
+         'Destino']  # F
 
     # Se agregan los vertices al grafo
-    g.agregarVertice(I)
-    for v in vert:
-        g.agregarVertice(v)
-    g.agregarVertice(F)
+    for e in v:
+        g.agregarVertice(e)
 
-    # Se indican las aristas del grafo y sus respectivas distancias
-    # Al agregarse las aristas, se va indicando el sentido de cada vertice
-    g.agregarArista(I, v1, 100)
-    g.agregarArista(v1, v2, 250)
-    g.agregarArista(v1, v4, 90)
-    g.agregarArista(v2, v3, 75)
-    g.agregarArista(v3, v7, 125)
-    g.agregarArista(v4, v1, 90)
-    g.agregarArista(v4, v6, 250)
-    g.agregarArista(v5, v4, 250)
-    g.agregarArista(v5, v2, 125)
-    g.agregarArista(v6, v5, 0)
-    g.agregarArista(v6, v7, 75)
-    g.agregarArista(v7, v5, 75)
-    g.agregarArista(v7, v11, 100)
-    g.agregarArista(v8, v4, 90)
-    g.agregarArista(v8, F, 50)
-    g.agregarArista(v9, v10, 120)
-    g.agregarArista(v10, v6, 90)
-    g.agregarArista(v10, v11, 90)
-    g.agregarArista(v11, v15, 100)
-    g.agregarArista(v12, v8, 90)
-    g.agregarArista(v13, v9, 90)
-    g.agregarArista(v13, v12, 100)
-    g.agregarArista(v14, v10, 90)
-    g.agregarArista(v14, v13, 120)
-    g.agregarArista(v15, v14, 100)
-    g.agregarArista(F, v9, 50)
+    # ARISTAS del grafo en forma de lista; cada elemento de la lista es otra lista que simboliza a un vertice:
+    # La sublista (arista) tiene tres elementos: vertice inicial, vertice final y distancia
+    a = [[v[0], v[1], 100],
+               [v[1], v[2], 250],
+               [v[1], v[4], 90],
+               [v[2], v[3], 75],
+               [v[3], v[7], 125],
+               [v[4], v[1], 90],
+               [v[4], v[6], 250],
+               [v[5], v[4], 250],
+               [v[5], v[2], 125],
+               [v[6], v[5], 0],
+               [v[6], v[7], 75],
+               [v[7], v[5], 75],
+               [v[7], v[11], 100],
+               [v[8], v[4], 90],
+               [v[8], v[-1], 50],
+               [v[9], v[10], 120],
+               [v[10], v[6], 90],
+               [v[10], v[11], 90],
+               [v[11], v[15], 100],
+               [v[12], v[8], 90],
+               [v[13], v[9], 90],
+               [v[13], v[12], 100],
+               [v[14], v[10], 90],
+               [v[14], v[13], 120],
+               [v[15], v[14], 100],
+               [v[-1], v[9], 50]]
+
+    # Se agregan las aristas al grafo
+    for e in a:
+        g.agregarArista(e[0], e[1], e[2])
 
     '''Camino mas corto mediante el algoritmo'''
-    g.dijkstra(I)  # Aqui se indica el vertice inicial
-    print(g.camino(F))  # Aqui se indica el vertice final
+    g.dijkstra(v[0])  # Aqui se indica el vertice inicial v[0]
+    print(g.camino(v[-1]))  # Aqui se indica el vertice final v[-1], es decir, el ultimo de la lista
 
     # A continuacion se indicara, para cada vertice, la distancia mas corta respecto al vertice inicial, y el vertice
     # desde donde viene para minimizar la distancia
