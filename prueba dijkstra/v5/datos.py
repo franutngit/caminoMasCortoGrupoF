@@ -5,6 +5,9 @@ class Datos:
     @staticmethod
     def vertices():
         # VERTICES del grafo enlistados
+        # Conjunto de todos los vertices del grafo:
+        # Aqui cada vertice ha sido nombrado como las esquinas de un mapa, con excepcion de los vertices de inicio y fin
+        # Se usan estos vertices para crear las aristas (tener en cuenta las posiciones en la lista, por los indices)
         v = ['UTN',  # 0
              'Rodriguez y Sobremonte',  # 1
              'Rodriguez y A Villanueva',  # 2
@@ -27,6 +30,9 @@ class Datos:
     @staticmethod
     def aristas(v):
         # ARISTAS del grafo enlistadas
+        # 'a' es el conjunto de todas las aristas del grafo
+        # Cada elemento de 'a' es una arista que contiene tres elementos:
+        # el primero es el vertice inicial de la arista, el segundo es el final, el ultimo la distancia entreambos
         a = [[v[0], v[1], 100],
              [v[1], v[2], 250],
              [v[1], v[4], 90],
