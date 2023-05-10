@@ -1,4 +1,4 @@
-"""Prueba Dijkstra - Tercer ajuste: Formato de listas en vertices y aristas"""
+"""Prueba Dijkstra - Cuarto ajuste: Interactividad con usuario"""
 
 '''Clase que define los vertices del grafo'''
 
@@ -20,7 +20,7 @@ class Vertice:
 '''Clase que define el grafo y calcula el camino mas corto'''
 
 
-class Grafica:
+class Grafo:
     def __init__(self):
         self.vertices = {}
 
@@ -43,18 +43,18 @@ class Grafica:
                 f'La distancia más corta al vertice {v} es {self.vertices[v].distancia}m; vértice predecesor: {self.vertices[v].predecesor}')
 
     # 5 - Metodo que indica el recorrido de la ruta mas corta y la distancia total de la misma
-    def camino(self, b):  # Recibe como parametro el vertice final
+    def camino(self, a, b):  # Recibe como parametro el vertice final
         camino = []
         actual = b
         if self.vertices[b].distancia == float('inf'):
             return 'El vertice final es inaccesible'
         else:
-            print("\n\nRuta mas rapida por Dijkstra y distancia correspondiente:")
+            print(f"\n La ruta mas rapida por Dijkstra desde '{a}' hasta '{b}' es:")
             # Recorre los vertices desde el final yendo por los predecesores, para definir el camino mas corto
             while actual is not None:
                 camino.insert(0, actual)
                 actual = self.vertices[actual].predecesor
-            return f'El camino mas corto es {camino} y la distancia es de {self.vertices[b].distancia} metros'
+            return f'{camino}; DISTANCIA RECORRIDA: {self.vertices[b].distancia} metros'
 
     # 4 - Funcion que retorna el vertice con menor distancia, de la lista de los no visitados
     def minimo(self, lista):  # lista: vertices no visitados
@@ -103,12 +103,34 @@ class Grafica:
 '''Clase que agrupa el codigo que ejecuta el algoritmo'''
 
 
-class main:
-    # Creacion del grafo de segundo ajuste (GRAFO DIRIGIDO)
-    g = Grafica()
+def origen(v):
+    while True:
+        print("Indique el punto de ORIGEN:")
+        for i in range(len(v)):
+            print(i + 1, v[i])
+        n = int(input('Opcion: '))
+        if 1 <= n <= len(v):
+            return v[n - 1]
+        else:
+            print("Opcion invalida")
 
-    # VERTICES en forma de lista (el primero es el origen y el ultimo es el destino):
-    v = ['UTN',  # I
+
+def destino(v):
+    while True:
+        print("Indique el punto de DESTINO:")
+        for i in range(len(v)):
+            print(i + 1, v[i])
+        n = int(input('Opcion: '))
+        if 1 <= n <= len(v):
+            return v[n - 1]
+        else:
+            print("Opcion invalida")
+
+
+class main:
+    """Datos: Vertices y Aristas"""
+    # VERTICES del grafo enlistados
+    v = ['UTN',  # 0
          'Rodriguez y Sobremonte',  # 1
          'Rodriguez y A Villanueva',  # 2
          'Rodriguez y R Ortega',  # 3
@@ -124,14 +146,8 @@ class main:
          '25 de Mayo y Infanta M de San Martin',  # 13
          'Colon y 25 de Mayo',  # 14
          '25 de Mayo y San Lorenzo',  # 15
-         'Destino']  # F
-
-    # Se agregan los vertices al grafo
-    for e in v:
-        g.agregarVertice(e)
-
-    # ARISTAS del grafo en forma de lista; cada elemento de la lista es otra lista que simboliza a un vertice:
-    # La sublista (arista) tiene tres elementos: vertice inicial, vertice final y distancia
+         'Peru entre P Molina y Infanta M de SM']  # 16
+    # ARISTAS del grafo enlistados
     a = [[v[0], v[1], 100],
          [v[1], v[2], 250],
          [v[1], v[4], 90],
@@ -159,15 +175,23 @@ class main:
          [v[15], v[14], 100],
          [v[-1], v[9], 50]]
 
-    # Se agregan las aristas al grafo
+    '''Armado del grafo'''
+    g = Grafo()
+    for e in v:
+        g.agregarVertice(e)
     for e in a:
         g.agregarArista(e[0], e[1], e[2])
 
-    '''Camino mas corto mediante el algoritmo'''
-    g.dijkstra(v[0])  # Aqui se indica el vertice inicial v[0]
-    print(g.camino(v[-1]))  # Aqui se indica el vertice final v[-1], es decir, el ultimo de la lista
+    '''Interaccion con el usuario'''
+    o = origen(v)
+    print(f'ORIGEN escogido: {o}\n')
+    d = destino(v)
+    print(f'DESTINO escogido: {d}')
 
-    # A continuacion se indicara, para cada vertice, la distancia mas corta respecto al vertice inicial, y el vertice
-    # desde donde viene para minimizar la distancia
-    print("\nValores finales de la grafica:")
-    g.imprimirGrafica()
+    '''Camino mas corto mediante Dijkstra'''
+    g.dijkstra(o)  # Aqui se indica el vertice inicial v[0]
+    print(g.camino(o, d))  # Aqui se indica el vertice final v[-1], es decir, el ultimo de la lista
+
+    # Valores por vertice:
+    # print("\nValores finales de la grafica:")
+    # g.imprimirGrafica()
