@@ -1,4 +1,4 @@
-"""Prueba Dijkstra - Cuarto ajuste: Interactividad con usuario"""
+"""Prueba Dijkstra - Quinto ajuste: Clases para datos y usuario"""
 
 '''Clase que define los vertices del grafo'''
 
@@ -92,78 +92,98 @@ class Grafo:
             return False
 
 
-# Las funciones ORIGEN y DESTINO son de interaccion con el usuario
-def origen(v):
-    while True:
-        print("Indique el punto de ORIGEN:")
-        for i in range(len(v)):
-            print(i, v[i])
-        n = int(input('Opcion: '))
-        if 0 <= n <= len(v) - 1:
-            return v[n]
-        else:
-            print("Opcion invalida")
+'''Clase para los datos del grafo: vertices y aristas'''
 
 
-def destino(v):
-    while True:
-        print("Indique el punto de DESTINO:")
-        for i in range(len(v)):
-            print(i, v[i])
-        n = int(input('Opcion: '))
-        if 0 <= n <= len(v) - 1:
-            return v[n]
-        else:
-            print("Opcion invalida")
+class Datos:
+    @staticmethod
+    def vertices():
+        # VERTICES del grafo enlistados
+        v = ['UTN',  # 0
+             'Rodriguez y Sobremonte',  # 1
+             'Rodriguez y A Villanueva',  # 2
+             'Rodriguez y R Ortega',  # 3
+             'Rotonda UTN',  # 4
+             'Belgrano y A Villanueva',  # 5
+             'Belgrano y Colon',  # 6
+             'Belgrano y R Ortega/San Lorenzo',  # 7
+             'Pedro Molina y Peru',  # 8
+             'Peru y Infanta M de San Martin',  # 9
+             'Colon y Peru',  # 10
+             'San Lorenzo y Peru',  # 11
+             'Pedro Molina y 25 de Mayo',  # 12
+             '25 de Mayo y Infanta M de San Martin',  # 13
+             'Colon y 25 de Mayo',  # 14
+             '25 de Mayo y San Lorenzo',  # 15
+             'Peru entre P Molina y Infanta M de SM']  # 16
+        return v
+
+    @staticmethod
+    def aristas(v):
+        # ARISTAS del grafo enlistadas
+        a = [[v[0], v[1], 100],
+             [v[1], v[2], 250],
+             [v[1], v[4], 90],
+             [v[2], v[3], 75],
+             [v[3], v[7], 125],
+             [v[4], v[1], 90],
+             [v[4], v[6], 250],
+             [v[5], v[4], 250],
+             [v[5], v[2], 125],
+             [v[6], v[5], 0],
+             [v[6], v[7], 75],
+             [v[7], v[5], 75],
+             [v[7], v[11], 100],
+             [v[8], v[4], 90],
+             [v[8], v[16], 50],
+             [v[9], v[10], 120],
+             [v[10], v[6], 90],
+             [v[10], v[11], 90],
+             [v[11], v[15], 100],
+             [v[12], v[8], 90],
+             [v[13], v[9], 90],
+             [v[13], v[12], 100],
+             [v[14], v[10], 90],
+             [v[14], v[13], 120],
+             [v[15], v[14], 100],
+             [v[16], v[9], 50]]
+        return a
+
+
+'''Clase para la interaccion con el usuario'''
+
+
+class Usuario:
+    @staticmethod
+    def origen(v):
+        while True:
+            print("Indique el punto de ORIGEN:")
+            for i in range(len(v)):
+                print(i, v[i])
+            n = int(input('Opcion: '))
+            if 0 <= n <= len(v) - 1:
+                return v[n]
+            else:
+                print("Opcion invalida")
+
+    @staticmethod
+    def destino(v):
+        while True:
+            print("Indique el punto de DESTINO:")
+            for i in range(len(v)):
+                print(i, v[i])
+            n = int(input('Opcion: '))
+            if 0 <= n <= len(v) - 1:
+                return v[n]
+            else:
+                print("Opcion invalida")
 
 
 class main:
     """Datos: Vertices y Aristas"""
-    # VERTICES del grafo enlistados
-    v = ['UTN',  # 0
-         'Rodriguez y Sobremonte',  # 1
-         'Rodriguez y A Villanueva',  # 2
-         'Rodriguez y R Ortega',  # 3
-         'Rotonda UTN',  # 4
-         'Belgrano y A Villanueva',  # 5
-         'Belgrano y Colon',  # 6
-         'Belgrano y R Ortega/San Lorenzo',  # 7
-         'Pedro Molina y Peru',  # 8
-         'Peru y Infanta M de San Martin',  # 9
-         'Colon y Peru',  # 10
-         'San Lorenzo y Peru',  # 11
-         'Pedro Molina y 25 de Mayo',  # 12
-         '25 de Mayo y Infanta M de San Martin',  # 13
-         'Colon y 25 de Mayo',  # 14
-         '25 de Mayo y San Lorenzo',  # 15
-         'Peru entre P Molina y Infanta M de SM']  # 16
-    # ARISTAS del grafo enlistadas
-    a = [[v[0], v[1], 100],
-         [v[1], v[2], 250],
-         [v[1], v[4], 90],
-         [v[2], v[3], 75],
-         [v[3], v[7], 125],
-         [v[4], v[1], 90],
-         [v[4], v[6], 250],
-         [v[5], v[4], 250],
-         [v[5], v[2], 125],
-         [v[6], v[5], 0],
-         [v[6], v[7], 75],
-         [v[7], v[5], 75],
-         [v[7], v[11], 100],
-         [v[8], v[4], 90],
-         [v[8], v[-1], 50],
-         [v[9], v[10], 120],
-         [v[10], v[6], 90],
-         [v[10], v[11], 90],
-         [v[11], v[15], 100],
-         [v[12], v[8], 90],
-         [v[13], v[9], 90],
-         [v[13], v[12], 100],
-         [v[14], v[10], 90],
-         [v[14], v[13], 120],
-         [v[15], v[14], 100],
-         [v[-1], v[9], 50]]
+    datos = Datos()
+    v = datos.vertices()
+    a = datos.aristas(v)
 
     '''Armado del grafo'''
     g = Grafo()
@@ -173,11 +193,14 @@ class main:
         g.agregarArista(e[0], e[1], e[2])
 
     '''Interaccion con el usuario'''
-    o = origen(v)
+    usuario = Usuario()
+    o = usuario.origen(v)
     print(f'ORIGEN escogido: {o}\n')
-    d = destino(v)
+    d = usuario.destino(v)
     print(f'DESTINO escogido: {d}')
 
     '''Camino mas corto mediante Dijkstra'''
-    g.dijkstra(o)  # Aqui se indica el vertice inicial
-    print(g.camino(o, d))  # Aqui se indican los verices inicial y final
+    # Se aplica el algoritmo con el vertice inicial
+    g.dijkstra(o)
+    # Se muestra el camino mas corto con los vertices inicial y final
+    print(g.camino(o, d))
