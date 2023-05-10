@@ -29,25 +29,18 @@ class Grafo:
         if v not in self.vertices:
             self.vertices[v] = Vertice(v)
 
-    # Metodo que crea las aristas del grafo, que son las uniones entre los vertices
+    # Crea las aristas del grafo:
     def agregarArista(self, a, b, p):
         if a in self.vertices and b in self.vertices:  # Se chequea si los vertices ya se encuentran en el diccionario
-            # Para un GRAFO DIRIGIDO se ajustara esta linea, de 'a' hacia 'b'
             self.vertices[a].agregarVecino(b, p)
-            # 'b' es vecino de 'a', pero no al reves, ya que esta dirigido de 'a' a 'b'
-
-    # 6 - Metodo que devuelve la informacion que contiene cada vertice (distancia y predecesor):
-    def imprimirGrafica(self):
-        for v in self.vertices:
-            print(
-                f'La distancia más corta al vertice {v} es {self.vertices[v].distancia}m; vértice predecesor: {self.vertices[v].predecesor}')
+            # En este caso, la arista va dirigida de 'a' hacia 'b'
 
     # 5 - Metodo que indica el recorrido de la ruta mas corta y la distancia total de la misma
-    def camino(self, a, b):  # Recibe como parametro el vertice final
+    def camino(self, a, b):
         camino = []
         actual = b
         if self.vertices[b].distancia == float('inf'):
-            return 'El vertice final es inaccesible'
+            return 'El DESTINO es inaccesible'
         else:
             print(f"\n La ruta mas rapida por Dijkstra desde '{a}' hasta '{b}' es:")
             # Recorre los vertices desde el final yendo por los predecesores, para definir el camino mas corto
@@ -61,7 +54,6 @@ class Grafo:
         if len(lista) > 0:
             m = self.vertices[lista[0]].distancia  # Distancia del primer elemento
             v = lista[0]  # El primer elemento es el primero de la lista
-            # Se recorre la lista completa de nodos no visitados
             for e in lista:
                 if m > self.vertices[e].distancia:
                     m = self.vertices[e].distancia  # Se actualiza la distancia si es menor
@@ -76,7 +68,7 @@ class Grafo:
             # 1 - Se crea una lista de vertices no visitados y se los llena
             noVisitados = []
             for v in self.vertices:
-                if v != a:  # el nodo inicial debe tener una distancia 0, por lo que no debe ingresar
+                if v != a:  # el nodo inicial debe tener una distancia 0
                     self.vertices[v].distancia = float('inf')  # Valor infinito por defecto
                 self.vertices[v].predecesor = None  # se indica al inicio no tiene predecesor
                 noVisitados.append(v)  # se añade el vertice a la lista
@@ -100,17 +92,15 @@ class Grafo:
             return False
 
 
-'''Clase que agrupa el codigo que ejecuta el algoritmo'''
-
-
+# Las funciones ORIGEN y DESTINO son de interaccion con el usuario
 def origen(v):
     while True:
         print("Indique el punto de ORIGEN:")
         for i in range(len(v)):
-            print(i + 1, v[i])
+            print(i, v[i])
         n = int(input('Opcion: '))
-        if 1 <= n <= len(v):
-            return v[n - 1]
+        if 0 <= n <= len(v) - 1:
+            return v[n]
         else:
             print("Opcion invalida")
 
@@ -119,12 +109,15 @@ def destino(v):
     while True:
         print("Indique el punto de DESTINO:")
         for i in range(len(v)):
-            print(i + 1, v[i])
+            print(i, v[i])
         n = int(input('Opcion: '))
-        if 1 <= n <= len(v):
-            return v[n - 1]
+        if 0 <= n <= len(v) - 1:
+            return v[n]
         else:
             print("Opcion invalida")
+
+
+'''Clase que agrupa el codigo que ejecuta el algoritmo'''
 
 
 class main:
@@ -189,9 +182,5 @@ class main:
     print(f'DESTINO escogido: {d}')
 
     '''Camino mas corto mediante Dijkstra'''
-    g.dijkstra(o)  # Aqui se indica el vertice inicial v[0]
-    print(g.camino(o, d))  # Aqui se indica el vertice final v[-1], es decir, el ultimo de la lista
-
-    # Valores por vertice:
-    # print("\nValores finales de la grafica:")
-    # g.imprimirGrafica()
+    g.dijkstra(o)  # Aqui se indica el vertice inicial
+    print(g.camino(o, d))  # Aqui se indican los verices inicial y final
