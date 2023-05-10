@@ -1,29 +1,30 @@
 """Prueba Dijkstra - Sexto ajuste: Modularizacion"""
 
 from grafo import Grafo
-from datos import Datos as dat
-from usuario import Usuario as user
+from datos import Datos as dato
+from usuario import Usuario as usuarios
 
 """Datos: Vertices y Aristas"""
-v = dat.vertices()
-a = dat.aristas(v)
+vertices = dato.vertices()
+aristas = dato.aristas(vertices)
 
 '''Armado del grafo'''
-graf = Grafo()
-for e in v:
-    graf.agregarVertice(e)
-for e in a:
-    graf.agregarArista(e[0], e[1], e[2])
+grafo = Grafo()
+for vertice in vertices:
+    grafo.agregarVertice(vertice)
+for arista in aristas:
+    grafo.agregarArista(arista[0], arista[1], arista[2])
 
 '''Interaccion con el usuario'''
-
-o = user.origen(v)
-print(f'ORIGEN escogido: {o}\n')
-d = user.destino(v)
-print(f'DESTINO escogido: {d}')
+# Se consulta al usuario cual debe ser el vertice de origen
+origen = usuarios.origen(vertices)
+print(f'ORIGEN escogido: {origen}\n')
+# Se consulta al usuario cual debe ser el vertice de destino
+destino = usuarios.destino(vertices)
+print(f'DESTINO escogido: {destino}')
 
 '''Camino mas corto mediante Dijkstra'''
-# Se aplica el algoritmo con el vertice inicial
-graf.dijkstra(o)
-# Se muestra el camino mas corto con los vertices inicial y final
-print(graf.camino(o, d))
+# Se aplica el algoritmo desde el vertice de origen
+grafo.dijkstra(origen)
+# Se muestra el camino mas corto desde los vertices origen y destino
+print(grafo.camino(origen, destino))

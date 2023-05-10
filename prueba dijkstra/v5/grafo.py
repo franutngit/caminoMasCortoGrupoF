@@ -2,17 +2,17 @@
 
 
 class Vertice:
-    def __init__(self, i):
-        self.id = i
+    def __init__(self, id):
+        self.id = id
         self.vecinos = []
         self.visitado = False
         self.predecesor = None
         self.distancia = float('inf')
 
-    def agregarVecino(self, v, p):
+    def agregarVecino(self, idVert, dist):
         # el condicional es para evitar la repeticion de vertices
-        if not v in self.vecinos:
-            self.vecinos.append([v, p])
+        if not idVert in self.vecinos:
+            self.vecinos.append([idVert, dist])
 
 
 """Clase que define el grafo y calcula el camino mas corto"""
@@ -20,71 +20,71 @@ class Vertice:
 
 class Grafo:
     def __init__(self):
-        self.vertices = {}
+        self.dicVertices = {}
 
-    def agregarVertice(self, v):
-        # Se chequea que el vertice no se encuentra en el diccionario
-        if v not in self.vertices:
-            self.vertices[v] = Vertice(v)
+    def agregarVertice(self, idVert):
+        # Se chequea que el vertice no se encuentre en el diccionario
+        if idVert not in self.dicVertices:
+            self.dicVertices[idVert] = Vertice(idVert)
 
     # Crea las aristas del grafo:
-    def agregarArista(self, a, b, p):
-        if a in self.vertices and b in self.vertices:  # Se chequea si los vertices ya se encuentran en el diccionario
-            self.vertices[a].agregarVecino(b, p)
-            # En este caso, la arista va dirigida de 'a' hacia 'b'
+    def agregarArista(self, idVertA, idVertB, dist):
+        if idVertA in self.dicVertices and idVertB in self.dicVertices:  # Se chequea si los vertices ya se encuentran en el diccionario
+            self.dicVertices[idVertA].agregarVecino(idVertB, dist)
+            # En este caso, la arista va dirigida de 'A' hacia 'B'
 
     # 5 - Metodo que indica el recorrido de la ruta mas corta y la distancia total de la misma
-    def camino(self, a, b):
+    def camino(self, idVertOrigen, idVertDestino):
         camino = []
-        actual = b
-        if self.vertices[b].distancia == float('inf'):
+        actual = idVertDestino
+        if self.dicVertices[idVertDestino].distancia == float('inf'):
             return 'El DESTINO es inaccesible'
         else:
-            print(f"\n La ruta mas rapida por Dijkstra desde '{a}' hasta '{b}' es:")
+            print(f"\n La ruta mas rapida por Dijkstra desde '{idVertOrigen}' hasta '{idVertDestino}' es:")
             # Recorre los vertices desde el final yendo por los predecesores, para definir el camino mas corto
             while actual is not None:
                 camino.insert(0, actual)
-                actual = self.vertices[actual].predecesor
-            return f'{camino}; DISTANCIA RECORRIDA: {self.vertices[b].distancia} metros'
+                actual = self.dicVertices[actual].predecesor
+            return f'{camino}; DISTANCIA RECORRIDA: {self.dicVertices[idVertDestino].distancia} metros'
 
     # 4 - Funcion que retorna el vertice con menor distancia, de la lista de los no visitados
-    def minimo(self, lista):  # lista: vertices no visitados
-        if len(lista) > 0:
-            m = self.vertices[lista[0]].distancia  # Distancia del primer elemento
-            v = lista[0]  # El primer elemento es el primero de la lista
-            for e in lista:
-                if m > self.vertices[e].distancia:
-                    m = self.vertices[e].distancia  # Se actualiza la distancia si es menor
-                    v = e  # Se indica cuál es el nodo de menor distancia
-            return v
+    def minimo(self, listVertNoV):  # lista: vertices no visitados
+        if len(listVertNoV) > 0:
+            distMenorVert = self.dicVertices[listVertNoV[0]].distancia  # Distancia del primer elemento
+            idVertMenorDist = listVertNoV[0]  # El primer elemento es el primero de la lista
+            for idVert in listVertNoV:
+                if distMenorVert > self.dicVertices[idVert].distancia:
+                    distMenorVert = self.dicVertices[idVert].distancia  # Se actualiza la distancia si es menor
+                    idVertMenorDist = idVert  # Se indica cuál es el nodo de menor distancia
+            return idVertMenorDist
 
     # Metodo que contiene el ALGORITMO DE DIJKSTRA
-    def dijkstra(self, a):
-        if a in self.vertices:  # Debe verificarse que el nodo de partida se encuentra en el conjunto de vertices
-            self.vertices[a].distancia = 0  # 1 - Se establece la distancia del nodo inicial como 0
-            actual = a  # 1 - Se establece que el vertice inicial como el actual
+    def dijkstra(self, idVertOrigen):
+        if idVertOrigen in self.dicVertices:  # Debe verificarse que el nodo de partida se encuentra en el conjunto de vertices
+            self.dicVertices[idVertOrigen].distancia = 0  # 1 - Se establece la distancia del nodo inicial como 0
+            actual = idVertOrigen  # 1 - Se establece que el vertice inicial como el actual
             # 1 - Se crea una lista de vertices no visitados y se los llena
-            noVisitados = []
-            for v in self.vertices:
-                if v != a:  # el nodo inicial debe tener una distancia 0
-                    self.vertices[v].distancia = float('inf')  # Valor infinito por defecto
-                self.vertices[v].predecesor = None  # se indica al inicio no tiene predecesor
-                noVisitados.append(v)  # se añade el vertice a la lista
+            vertNoVisitados = []
+            for idVert in self.dicVertices:
+                if idVert != idVertOrigen:  # el nodo inicial debe tener una distancia 0
+                    self.dicVertices[idVert].distancia = float('inf')  # Valor infinito por defecto
+                self.dicVertices[idVert].predecesor = None  # se indica al inicio no tiene predecesor
+                vertNoVisitados.append(idVert)  # se añade el vertice a la lista
 
             # 2 - Este bucle se repite mientras hayan vertices no visitados:
-            while len(noVisitados) > 0:
+            while len(vertNoVisitados) > 0:
                 # 2 - Se recorrera cada vecino del vertice actual, para ajustar las distancias y crear el camino:
-                for vecino in self.vertices[actual].vecinos:
-                    if not self.vertices[vecino[0]].visitado:  # Solo se consideran los vertices vecinos no visitados
+                for vertVecino in self.dicVertices[actual].vecinos:
+                    if not self.dicVertices[vertVecino[0]].visitado:  # Solo se consideran los vertices vecinos no visitados
                         # 2 - Se revisa si es necesario realizar la correccion de la distancia, para ver si hay una mas corta:
-                        if self.vertices[actual].distancia + vecino[1] < self.vertices[vecino[0]].distancia:
+                        if self.dicVertices[actual].distancia + vertVecino[1] < self.dicVertices[vertVecino[0]].distancia:
                             # Si se cumple la condicion anterior, se corrige la distancia y se indica el predecesor
-                            self.vertices[vecino[0]].distancia = self.vertices[actual].distancia + vecino[1]
-                            self.vertices[vecino[0]].predecesor = actual
+                            self.dicVertices[vertVecino[0]].distancia = self.dicVertices[actual].distancia + vertVecino[1]
+                            self.dicVertices[vertVecino[0]].predecesor = actual
                 # 3 - Se define el vertice actual como visitado y se lo quita de la lista de no visitados
-                self.vertices[actual].visitado = True
-                noVisitados.remove(actual)
+                self.dicVertices[actual].visitado = True
+                vertNoVisitados.remove(actual)
                 # 4 - Se define el nuevo vertice actual, el cual debe tener la menor distancia recorrida
-                actual = self.minimo(noVisitados)
+                actual = self.minimo(vertNoVisitados)
         else:
             return False
