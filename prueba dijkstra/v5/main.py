@@ -10,8 +10,8 @@ aristas = dato.aristas(vertices)
 
 '''Armado del grafo'''
 grafo = Grafo()
-for vertice in vertices:
-    grafo.agregarVertice(vertice)
+for idVertice in vertices:
+    grafo.agregarVertice(idVertice)
 for arista in aristas:
     grafo.agregarArista(arista[0], arista[1], arista[2])
 
