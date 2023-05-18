@@ -7,10 +7,7 @@ start_coord = (-32.897330, -68.853555)  # Utn
 end_coord = (-32.904422, -68.842819)  # Casino de Mendoza
 
 # Obtener el grafo de la red de calles en un área cercana al punto de inicio para conducción en auto
-graph = ox.graph_from_point(start_coord, dist=3000, network_type='drive')
-
-# Convertir el grafo a un grafo no dirigido para encontrar la ruta más corta
-graph = graph.to_undirected()
+graph = ox.graph_from_point(start_coord, dist=3000, network_type='drive', simplify=True)
 
 # Agregar los nodos de inicio y fin al grafo
 start_node = ox.distance.nearest_nodes(graph, start_coord[1], start_coord[0])
