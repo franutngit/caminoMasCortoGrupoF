@@ -4,12 +4,15 @@ import networkx as nx
 import requests
 import webbrowser
 import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
 
 # Función para obtener las coordenadas geográficas a partir de una dirección
-def geocode_address(address):
+def geocode_address(country, province, department, address):
+    location = f"{address}, {department}, {province}, {country}"
     url = 'https://nominatim.openstreetmap.org/search'
     params = {
-        'q': address,
+        'q': location,
         'format': 'json',
         'limit': 1
     }
@@ -20,17 +23,33 @@ def geocode_address(address):
             return float(data[0]['lat']), float(data[0]['lon'])
     return None
 
-def get_directions():
-    start_address = start_entry.get()
-    end_address = end_entry.get()
+def calculate_distance(start_coord, end_coord):
+    return ox.distance.great_circle_vec(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
 
-    # Obtener las coordenadas geográficas de las direcciones
-    start_coord = geocode_address(start_address)
-    end_coord = geocode_address(end_address)
+def get_directions():
+    start_country = start_country_entry.get()
+    start_province = start_province_entry.get()
+    start_department = start_department_entry.get()
+    start_address = start_address_entry.get()
+
+    end_country = end_country_entry.get()
+    end_province = end_province_entry.get()
+    end_department = end_department_entry.get()
+    end_address = end_address_entry.get()
+
+    # Deshabilitar el botón de obtener direcciones
+    get_directions_button.configure(state='disabled')
+
+    # Obtener las coordenadas geográficas de las direcciones de origen y destino
+    start_coord = geocode_address(start_country, start_province, start_department, start_address)
+    end_coord = geocode_address(end_country, end_province, end_department, end_address)
 
     if start_coord is not None and end_coord is not None:
+        # Calcular la distancia entre el punto de inicio y el punto de destino
+        distance = calculate_distance(start_coord, end_coord)
+
         # Obtener el grafo de la red de calles en un área cercana al punto de inicio para conducción en auto
-        graph = ox.graph_from_point(start_coord, dist=3000, network_type='drive', simplify=True)
+        graph = ox.graph_from_point((start_coord[1], start_coord[0]), dist=distance, network_type='drive', simplify=True)
 
         # Agregar los nodos de inicio y fin al grafo
         start_node = ox.distance.nearest_nodes(graph, start_coord[1], start_coord[0])
@@ -54,30 +73,63 @@ def get_directions():
         folium.PolyLine(path_coords, color='blue', weight=2.5, opacity=1).add_to(map)
 
         # Mostrar el mapa
-        map.save("map.html")
-        webbrowser.open_new_tab('map.html')
+        map.save('map.html')
+        webbrowser.open('map.html')
+
     else:
-        print("No se pudieron obtener las coordenadas para las direcciones especificadas.")
+        messagebox.showerror("Error", "No se pudieron obtener las coordenadas de inicio y fin.")
+
+    # Habilitar nuevamente el botón de obtener direcciones
+    get_directions_button.configure(state='normal')
 
 # Crear la ventana principal
 window = tk.Tk()
-window.title("Ruta más corta")
-window.geometry("400x200")
+window.title("Calculadora de Ruta")
 
-# Etiquetas y campos de entrada para las direcciones
-start_label = tk.Label(window, text="Dirección de punto de origen:")
-start_label.pack()
-start_entry = tk.Entry(window)
-start_entry.pack()
+# Crear los campos de entrada de direcciones
+start_country_label = ttk.Label(window, text="País de inicio:")
+start_country_label.grid(column=0, row=0, padx=10, pady=5)
+start_country_entry = ttk.Entry(window)
+start_country_entry.grid(column=1, row=0, padx=10, pady=5)
 
-end_label = tk.Label(window, text="Dirección de punto destino:")
-end_label.pack()
-end_entry = tk.Entry(window)
-end_entry.pack()
+start_province_label = ttk.Label(window, text="Provincia de inicio:")
+start_province_label.grid(column=0, row=1, padx=10, pady=5)
+start_province_entry = ttk.Entry(window)
+start_province_entry.grid(column=1, row=1, padx=10, pady=5)
 
-# Botón para obtener las direcciones y mostrar el mapa
-get_directions_button = tk.Button(window, text="Obtener direcciones", command=get_directions)
-get_directions_button.pack()
+start_department_label = ttk.Label(window, text="Departamento de inicio:")
+start_department_label.grid(column=0, row=2, padx=10, pady=5)
+start_department_entry = ttk.Entry(window)
+start_department_entry.grid(column=1, row=2, padx=10, pady=5)
 
-# Ejecutar la ventana principal
+start_address_label = ttk.Label(window, text="Dirección de inicio:")
+start_address_label.grid(column=0, row=3, padx=10, pady=5)
+start_address_entry = ttk.Entry(window)
+start_address_entry.grid(column=1, row=3, padx=10, pady=5)
+
+end_country_label = ttk.Label(window, text="País de destino:")
+end_country_label.grid(column=0, row=4, padx=10, pady=5)
+end_country_entry = ttk.Entry(window)
+end_country_entry.grid(column=1, row=4, padx=10, pady=5)
+
+end_province_label = ttk.Label(window, text="Provincia de destino:")
+end_province_label.grid(column=0, row=5, padx=10, pady=5)
+end_province_entry = ttk.Entry(window)
+end_province_entry.grid(column=1, row=5, padx=10, pady=5)
+
+end_department_label = ttk.Label(window, text="Departamento de destino:")
+end_department_label.grid(column=0, row=6, padx=10, pady=5)
+end_department_entry = ttk.Entry(window)
+end_department_entry.grid(column=1, row=6, padx=10, pady=5)
+
+end_address_label = ttk.Label(window, text="Dirección de destino:")
+end_address_label.grid(column=0, row=7, padx=10, pady=5)
+end_address_entry = ttk.Entry(window)
+end_address_entry.grid(column=1, row=7, padx=10, pady=5)
+
+# Crear el botón de obtener direcciones
+get_directions_button = ttk.Button(window, text="Obtener Direcciones", command=get_directions)
+get_directions_button.grid(column=0, row=8, columnspan=2, padx=10, pady=10)
+
+# Iniciar el bucle de la aplicación
 window.mainloop()
