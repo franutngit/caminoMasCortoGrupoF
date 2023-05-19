@@ -2,6 +2,7 @@ import folium
 import osmnx as ox
 import networkx as nx
 import requests
+import webbrowser
 
 # Función para obtener las coordenadas geográficas a partir de una dirección
 def geocode_address(address):
@@ -53,5 +54,6 @@ if start_coord is not None and end_coord is not None:
 
     # Mostrar el mapa
     map.save("map.html")
+    webbrowser.open_new_tab('map.html')
 else:
     print("No se pudieron obtener las coordenadas para las direcciones especificadas.")
