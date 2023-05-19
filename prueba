@@ -23,9 +23,6 @@ def geocode_address(country, province, department, address):
             return float(data[0]['lat']), float(data[0]['lon'])
     return None
 
-def calculate_distance(start_coord, end_coord):
-    return ox.distance.great_circle_vec(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
-
 def get_directions():
     start_country = start_country_entry.get()
     start_province = start_province_entry.get()
@@ -45,11 +42,8 @@ def get_directions():
     end_coord = geocode_address(end_country, end_province, end_department, end_address)
 
     if start_coord is not None and end_coord is not None:
-        # Calcular la distancia entre el punto de inicio y el punto de destino
-        distance = calculate_distance(start_coord, end_coord)
-
         # Obtener el grafo de la red de calles en un área cercana al punto de inicio para conducción en auto
-        graph = ox.graph_from_point((start_coord[1], start_coord[0]), dist=distance, network_type='drive', simplify=True)
+        graph = ox.graph_from_point(start_coord, dist=8000, network_type='drive', simplify=True)
 
         # Agregar los nodos de inicio y fin al grafo
         start_node = ox.distance.nearest_nodes(graph, start_coord[1], start_coord[0])
@@ -73,63 +67,89 @@ def get_directions():
         folium.PolyLine(path_coords, color='blue', weight=2.5, opacity=1).add_to(map)
 
         # Mostrar el mapa
-        map.save('map.html')
-        webbrowser.open('map.html')
+        map.save("map.html")
+        webbrowser.open_new_tab('map.html')
 
+        # Cerrar la ventana principal
+        window.destroy()
     else:
-        messagebox.showerror("Error", "No se pudieron obtener las coordenadas de inicio y fin.")
+        messagebox.showerror("Error", "No se pudieron obtener las coordenadas para las direcciones especificadas.")
 
-    # Habilitar nuevamente el botón de obtener direcciones
-    get_directions_button.configure(state='normal')
+        # Restaurar el estado inicial
+        get_directions_button.configure(state='normal')
 
 # Crear la ventana principal
 window = tk.Tk()
-window.title("Calculadora de Ruta")
+window.title("Ruta más corta")
 
-# Crear los campos de entrada de direcciones
-start_country_label = ttk.Label(window, text="País de inicio:")
-start_country_label.grid(column=0, row=0, padx=10, pady=5)
-start_country_entry = ttk.Entry(window)
-start_country_entry.grid(column=1, row=0, padx=10, pady=5)
+def center_window(window):
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    x = (window.winfo_screenwidth() // 2) - (width // 2)
+    y = (window.winfo_screenheight() // 2) - (height // 2)
+    window.geometry(f"{width}x{height}+{x}+{y}")
 
-start_province_label = ttk.Label(window, text="Provincia de inicio:")
-start_province_label.grid(column=0, row=1, padx=10, pady=5)
-start_province_entry = ttk.Entry(window)
-start_province_entry.grid(column=1, row=1, padx=10, pady=5)
+# Personalizar estilo de fuente
+font_style = ("Arial", 14)
 
-start_department_label = ttk.Label(window, text="Departamento de inicio:")
-start_department_label.grid(column=0, row=2, padx=10, pady=5)
-start_department_entry = ttk.Entry(window)
-start_department_entry.grid(column=1, row=2, padx=10, pady=5)
+# Marco para las direcciones de origen
+frame_start = ttk.Frame(window, padding=20)
+frame_start.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-start_address_label = ttk.Label(window, text="Dirección de inicio:")
-start_address_label.grid(column=0, row=3, padx=10, pady=5)
-start_address_entry = ttk.Entry(window)
-start_address_entry.grid(column=1, row=3, padx=10, pady=5)
+start_label = ttk.Label(frame_start, text="Dirección de origen:", font=font_style)
+start_label.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
 
-end_country_label = ttk.Label(window, text="País de destino:")
-end_country_label.grid(column=0, row=4, padx=10, pady=5)
-end_country_entry = ttk.Entry(window)
-end_country_entry.grid(column=1, row=4, padx=10, pady=5)
+start_country_label = ttk.Label(frame_start, text="País:", font=font_style)
+start_country_label.grid(row=1, column=0, padx=10, pady=5)
+start_country_entry = ttk.Entry(frame_start, font=font_style)
+start_country_entry.grid(row=1, column=1, padx=10, pady=5)
 
-end_province_label = ttk.Label(window, text="Provincia de destino:")
-end_province_label.grid(column=0, row=5, padx=10, pady=5)
-end_province_entry = ttk.Entry(window)
-end_province_entry.grid(column=1, row=5, padx=10, pady=5)
+start_province_label = ttk.Label(frame_start, text="Provincia:", font=font_style)
+start_province_label.grid(row=2, column=0, padx=10, pady=5)
+start_province_entry = ttk.Entry(frame_start, font=font_style)
+start_province_entry.grid(row=2, column=1, padx=10, pady=5)
 
-end_department_label = ttk.Label(window, text="Departamento de destino:")
-end_department_label.grid(column=0, row=6, padx=10, pady=5)
-end_department_entry = ttk.Entry(window)
-end_department_entry.grid(column=1, row=6, padx=10, pady=5)
+start_department_label = ttk.Label(frame_start, text="Departamento:", font=font_style)
+start_department_label.grid(row=3, column=0, padx=10, pady=5)
+start_department_entry = ttk.Entry(frame_start, font=font_style)
+start_department_entry.grid(row=3, column=1, padx=10, pady=5)
 
-end_address_label = ttk.Label(window, text="Dirección de destino:")
-end_address_label.grid(column=0, row=7, padx=10, pady=5)
-end_address_entry = ttk.Entry(window)
-end_address_entry.grid(column=1, row=7, padx=10, pady=5)
+start_address_label = ttk.Label(frame_start, text="Dirección:", font=font_style)
+start_address_label.grid(row=4, column=0, padx=10, pady=5)
+start_address_entry = ttk.Entry(frame_start, font=font_style)
+start_address_entry.grid(row=4, column=1, padx=10, pady=5)
 
-# Crear el botón de obtener direcciones
-get_directions_button = ttk.Button(window, text="Obtener Direcciones", command=get_directions)
-get_directions_button.grid(column=0, row=8, columnspan=2, padx=10, pady=10)
+# Marco para las direcciones de destino
+frame_end = ttk.Frame(window, padding=20)
+frame_end.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-# Iniciar el bucle de la aplicación
+end_label = ttk.Label(frame_end, text="Dirección de destino:", font=font_style)
+end_label.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
+
+end_country_label = ttk.Label(frame_end, text="País:", font=font_style)
+end_country_label.grid(row=1, column=0, padx=10, pady=5)
+end_country_entry = ttk.Entry(frame_end, font=font_style)
+end_country_entry.grid(row=1, column=1, padx=10, pady=5)
+
+end_province_label = ttk.Label(frame_end, text="Provincia:", font=font_style)
+end_province_label.grid(row=2, column=0, padx=10, pady=5)
+end_province_entry = ttk.Entry(frame_end, font=font_style)
+end_province_entry.grid(row=2, column=1, padx=10, pady=5)
+
+end_department_label = ttk.Label(frame_end, text="Departamento:", font=font_style)
+end_department_label.grid(row=3, column=0, padx=10, pady=5)
+end_department_entry = ttk.Entry(frame_end, font=font_style)
+end_department_entry.grid(row=3, column=1, padx=10, pady=5)
+
+end_address_label = ttk.Label(frame_end, text="Dirección:", font=font_style)
+end_address_label.grid(row=4, column=0, padx=10, pady=5)
+end_address_entry = ttk.Entry(frame_end, font=font_style)
+end_address_entry.grid(row=4, column=1, padx=10, pady=5)
+
+# Botón para obtener la dirección
+get_directions_button = ttk.Button(window, text="Obtener Dirección", command=get_directions, padding=(10, 5), style='Accent.TButton')
+get_directions_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+
+center_window(window)
 window.mainloop()
