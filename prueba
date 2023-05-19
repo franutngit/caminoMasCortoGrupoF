@@ -23,6 +23,9 @@ def geocode_address(country, province, department, address):
             return float(data[0]['lat']), float(data[0]['lon'])
     return None
 
+def calculate_distance(start_coord, end_coord):
+    return ox.distance.great_circle_vec(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
+
 def get_directions():
     start_country = start_country_entry.get()
     start_province = start_province_entry.get()
@@ -42,8 +45,11 @@ def get_directions():
     end_coord = geocode_address(end_country, end_province, end_department, end_address)
 
     if start_coord is not None and end_coord is not None:
+        # Calcular la distancia entre el punto de inicio y el punto de destino
+        distance = calculate_distance(start_coord, end_coord)
+
         # Obtener el grafo de la red de calles en un área cercana al punto de inicio para conducción en auto
-        graph = ox.graph_from_point(start_coord, dist=8000, network_type='drive', simplify=True)
+        graph = ox.graph_from_point(start_coord, dist=distance, network_type='drive', simplify=True)
 
         # Agregar los nodos de inicio y fin al grafo
         start_node = ox.distance.nearest_nodes(graph, start_coord[1], start_coord[0])
@@ -147,9 +153,16 @@ end_address_label.grid(row=4, column=0, padx=10, pady=5)
 end_address_entry = ttk.Entry(frame_end, font=font_style)
 end_address_entry.grid(row=4, column=1, padx=10, pady=5)
 
-# Botón para obtener la dirección
-get_directions_button = ttk.Button(window, text="Obtener Dirección", command=get_directions, padding=(10, 5), style='Accent.TButton')
-get_directions_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+# Botón para obtener direcciones
+get_directions_button = ttk.Button(window, text="Obtener direcciones", command=get_directions, style="Accent.TButton")
+get_directions_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
 
+# Etiqueta para el tiempo estimado
+time_label = ttk.Label(window, text="Tiempo estimado: 30 segundos", font=font_style)
+time_label.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+
+# Centrar la ventana principal
 center_window(window)
+
+# Iniciar el bucle de la aplicación
 window.mainloop()
