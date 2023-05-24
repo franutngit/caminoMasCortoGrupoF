@@ -75,8 +75,8 @@ def get_directions():
             folium.PolyLine(path_coords, color='blue', weight=2.5, opacity=1).add_to(map)
 
             # Mostrar el mapa
-            map.save("map.html")
-            webbrowser.open_new_tab('map.html')
+            map.save("Camino mas corto.html")
+            webbrowser.open_new_tab('Camino mas corto.html')
 
             # Cerrar la ventana principal y finalizar el programa para que se termine de ejecutar el bucle
             window.quit()
