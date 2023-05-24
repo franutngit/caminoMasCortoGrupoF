@@ -172,4 +172,4 @@ time_label.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
 center_window(window)
 
 # Iniciar el bucle de la aplicación
-window.mainloop()
+window.mainloop() 
