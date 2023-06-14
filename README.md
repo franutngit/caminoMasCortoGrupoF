@@ -4,7 +4,7 @@ Trabajo de implementacion del algoritmo de Dijkstra  en OpenStreetmap utilizando
 ## Integrantes del grupo de trabajo
 - Biritos, Luis Agustin
 - Fiorenza, Brian Nahuel
-- Lumonte, Carlos
+- Lumonte, Carlos Joel
 - Montes, Gabriel Agustin
 - San Martin, Franco Nicolas
 
